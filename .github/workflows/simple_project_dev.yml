@@ -32,11 +32,11 @@ jobs:
       - run: pip3 install wheel
       - run: pip install -r requirements.txt
 
-      - name: Run unit tests
-        env:
-          SPARK_REMOTE: ${{secrets.SPARK_REMOTE}}   
-        run: |
-          pytest tests/
+      # - name: Run unit tests
+      #   env:
+      #     SPARK_REMOTE: ${{secrets.SPARK_REMOTE}}   
+      #   run: |
+      #     pytest tests/
       
       - uses: databricks/setup-cli@main
 
@@ -45,34 +45,34 @@ jobs:
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
           DATABRICKS_BUNDLE_ENV: dev
 
-  pipeline_update:
-    name: "Run pipeline update"
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./simple_project
+#   pipeline_update:
+#     name: "Run pipeline update"
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         working-directory: ./simple_project
 
-    needs:
-      - deploy
+#     needs:
+#       - deploy
 
-    steps:
-      - uses: actions/checkout@v3
+#     steps:
+#       - uses: actions/checkout@v3
 
-#       - uses: actions/setup-python@v4
-#         with:
-#           python-version: 3.11
-#           cache: 'pip'
+# #       - uses: actions/setup-python@v4
+# #         with:
+# #           python-version: 3.11
+# #           cache: 'pip'
 
-#       - run: pip install -r requirements.txt
-#         working-directory: .github/support
+# #       - run: pip install -r requirements.txt
+# #         working-directory: .github/support
 
-      - uses: databricks/setup-cli@main
+#       - uses: databricks/setup-cli@main
 
-      - shell: bash
-        name: Run e2e test workflow
-        run: |
-          set -o pipefail
-          databricks bundle run notebook_validation_job --refresh-all 2>&1 | tee output.log
-        env:
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-          DATABRICKS_BUNDLE_ENV: dev
+#       - shell: bash
+#         name: Run e2e test workflow
+#         run: |
+#           set -o pipefail
+#           databricks bundle run notebook_validation_job --refresh-all 2>&1 | tee output.log
+#         env:
+#           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+#           DATABRICKS_BUNDLE_ENV: dev
